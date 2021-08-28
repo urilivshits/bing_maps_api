@@ -34,12 +34,14 @@ const Map = ({defaultCoords}) => {
             });
 
             function selectedSuggestion(suggestionResult) {
+                //check to update the pins and polygons array
                 if (pinsCounter >= 3) {
                     map.entities.clear(); //would've added instead .shift() functionality to remove only the oldest marker from the map but need more time to figure out how to manipulate map.entities
                     coords = [];
                     pinsCounter = 0;
                 };
-                // map.setView({ bounds: suggestionResult.bestView });
+
+                //adding new pins
                 map.setView({ center: new window.Microsoft.Maps.Location(suggestionResult.location.latitude, suggestionResult.location.longitude), zoom: 10 });
                 var pushpin = new window.Microsoft.Maps.Pushpin(suggestionResult.location);
                 map.entities.push(pushpin);
@@ -48,6 +50,7 @@ const Map = ({defaultCoords}) => {
                 '<br> Lat: ' + suggestionResult.location.latitude +
                 '<br> Lon: ' + suggestionResult.location.longitude;
                 pinsCounter++;
+
                 //saving results for triangulation
                 suggestionResult.timeStamp = Date.now();
                 setMapSaved(oldArray => [...oldArray, suggestionResult] );
@@ -60,7 +63,6 @@ const Map = ({defaultCoords}) => {
                     strokeColor: 'red',
                     strokeThickness: 2
                 });
-        
                 map.entities.push(polygon);
             };
 
@@ -76,6 +78,7 @@ const Map = ({defaultCoords}) => {
         };
     }, [defaultCoords.latitude, defaultCoords.longitude]);
     
+    //this is not used since managed to manipulate it all inside the native component
     if (mapSaved.length > 3) {
         let fullArray = mapSaved;
         // fullArray.shift();
